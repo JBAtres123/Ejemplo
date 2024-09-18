@@ -1,0 +1,65 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+<link href="css/Style.css" rel="stylesheet" />
+
+<h3>Formulario de Estudiante</h3>
+
+<EditForm Model="@student" OnValidSubmit="@SaveStudent">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Nombre:</label>
+        <InputText id="name" class="form-control" @bind-Value="student.Name" />
+        <ValidationMessage For="@(() => student.Name)" />
+    </div>
+
+    <div class="form-group">
+        <label for="age">Edad:</label>
+        <InputNumber id="age" class="form-control" @bind-Value="student.Age" />
+        <ValidationMessage For="@(() => student.Age)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Correo Electrónico:</label>
+        <InputText id="email" class="form-control" @bind-Value="student.Email" />
+        <ValidationMessage For="@(() => student.Email)" />
+    </div>
+
+    <div class="form-group">
+        <label for="major">Carrera:</label>
+        <InputText id="major" class="form-control" @bind-Value="student.Major" />
+        <ValidationMessage For="@(() => student.Major)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</EditForm>
+
+@if (successMessage != null)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@code {
+    private Student student = new Student();
+    private string successMessage;
+
+    private void SaveStudent()
+    {
+        successMessage = $"Estudiante {student.Name} ha sido guardado exitosamente.";
+    }
+
+    public class Student
+    {
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        public string Name { get; set; }
+
+        [Range(18, 100, ErrorMessage = "La edad debe estar entre 18 y 100.")]
+        public int Age { get; set; }
+
+        [EmailAddress(ErrorMessage = "Correo electrónico inválido.")]
+        public string Email { get; set; }
+
+        public string Major { get; set; }
+    }
+}
